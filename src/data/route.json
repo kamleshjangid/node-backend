@@ -1,0 +1,51 @@
+[
+    {
+      "id": "1ed58398-79e1-4d43-9967-a1ec7babacfd",
+      "adminId": null,
+      "name": "GFP Run",
+      "description": "",
+      "isActive":true,
+      "isDeleted": false
+    },
+    {
+      "id": "9df82c4c-76e0-441d-a1cc-4ce6a8022ae8",
+      "adminId": null,
+      "name": "Fruitique Country RUN",
+      "description": "",
+      "isActive":true,
+      "isDeleted": false
+    },
+    {
+      "id": "cb36d027-2162-4850-84d9-8663d1441224",
+      "adminId": null,
+      "name": "Fruitique Metro",
+      "description": "",
+      "isActive":true,
+      "isDeleted": false
+    },
+    {
+      "id": "1c23b32d-9f8c-454f-923c-66e528f60693",
+      "adminId": null,
+      "name": "TNT Run",
+      "description": "",
+      "isActive":true,
+      "isDeleted": false
+    },
+    {
+      "id": "9ec96816-24e4-4d20-8598-258136854732",
+      "adminId": null,
+      "name": "Leave at BAKERY",
+      "description": "",
+      "isActive":true,
+      "isDeleted": false
+    },
+    {
+      "id": "6c5e0b6c-9ad4-434f-ace0-38a2473bcaa2",
+      "adminId": null,
+      "name": "Roadmaster",
+      "description": "",
+      "isActive":true,
+      "isDeleted": false
+    }
+  ]
+  

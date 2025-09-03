@@ -1,0 +1,27 @@
+# Ignore node_modules directory
+node_modules
+
+# Ignore .git.zip file
+.git.zip
+
+# Ignore .env file
+.env
+
+# Ignore logs directory and files inside it
+**/logs/*.log
+**/logs/*.json
+
+# Ignore postman directory and its contents within src
+# src/**/postman/*.json
+src/postman/*.json
+
+# Ignore files and directories containing "postman" in their names
+# **/*postman*
+
+src/postman/*
+logs/*
+logs
+
+# Ignore Dockerfile
+Dockerfile
+

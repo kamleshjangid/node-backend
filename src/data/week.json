@@ -1,0 +1,37 @@
+[
+    {
+        "id":"8f331f21-67a1-4931-a3dd-a7dc71a14c77",
+        "name":"Monday",
+        "displayOrder":1  
+    },
+    {
+        "id":"55d70e6f-028a-42c0-b187-45bf6bca5610",
+        "name":"Tuesday",
+        "displayOrder":2
+    },
+    {
+        "id":"dcbee0f5-c189-4fd1-a5f6-e198597599ae",
+        "name":"Wednesday",
+        "displayOrder":3
+    },
+    {
+        "id":"e172ed7e-9b41-4688-ac5c-a2d451b51343",
+        "name":"Thursday",
+        "displayOrder":4
+    },
+    {
+        "id":"cc653cd6-1664-4f62-9e8c-cc4101f80592",
+        "name":"Friday",
+        "displayOrder":5
+    },
+    {
+        "id":"6d2883f7-12e2-427d-b222-7277ef36d9b8",
+        "name":"Saturday",
+        "displayOrder":6
+    },
+    {
+        "id":"7ec05019-d8aa-4830-8833-8574f91111ad",
+        "name":"Sunday",
+        "displayOrder":7
+    }
+]

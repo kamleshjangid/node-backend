@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login </title>
+    <link rel="stylesheet" type="text/css" href="/front/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/front/custom.css">
+    <style>
+      /* Custom CSS for version text */
+      #versionText {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          font-size: 14px;
+          color: #666;
+      }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-12 col-md-12 col-lg-3 offset-lg-0 ">
+        <form  method="post" id="loginform">
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 text-center py-4">&nbsp;</div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 py-4 mt-5 pt-5 text-center">
+            <h2>Log In</h2>
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" name="email" id="email" placeholder="name@example.com" autofocus autocomplete="off" value="dev@gmail.com">
+              <label for="email">Email address</label>
+            </div>
+            <div class="form-floating">
+              <input type="password" class="form-control" name="password" id="password" placeholder="Password" autocomplete="off" value="Dev@1234">
+              <label for="password">Password</label>              
+            </div>
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 py-3">
+              <div class="text-end">
+                <a href="javascript:void(0)" class="link-dark text-decoration-none">Forgot password?</a>
+              </div>
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="d-grid">
+              <button class="btn btn-lg btn-dark rounded-0 fs-6" type="submit" id="submitBtn">
+                <span class="spinner-border text-white spinner-border-sm me-2" id="btn_spinner" role="status" aria-hidden="true"> </span>                  
+                <span id="submitBtnText">Submit</span>
+              </button>
+            </div>
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 py-2">
+          <div id="loginmsg"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+<!-- Version text -->
+<div id="versionText">Version <%= version %></div>  
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/front/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/front/js/jquery.validate.js"></script>
+    <script type="text/javascript" src="/front/js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/front/js/additional-methods.min.js"></script>
+    <script type="text/javascript" src="/front/custom/validation.js"></script>
+
+</body>
+</html>

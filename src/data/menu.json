@@ -1,0 +1,331 @@
+[
+  {
+      "id": 0,
+      "title": "Dashboard",
+      "path": "dashboard",
+      "icon": "<AiFillDashboard />",
+      "type": "edit",
+      "isLabel": true,
+      "children": []
+  },
+  {
+      "id": 1,
+      "title": "Item Management",
+      "path": "item-management",
+      "icon": "<AiFillProduct />",
+      "type": "edit",
+      "isLabel": false,
+      "children": [
+          {
+              "hideUrl": false,
+              "title": "Item group",
+              "path": "item-management/items-group",
+              "id": 1,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Item",
+              "path": "item-management/item-list",
+              "id": 2,
+              "type": "edit"
+          },
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "item-management/add-item",
+              "id": 3,
+              "type": "edit"
+          },
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "item-management/edit-item",
+              "id": 4,
+              "type": "edit"
+          }
+      ]
+  },
+  {
+      "id": 2,
+      "title": "Customer Management",
+      "path": "customer/list",
+      "icon": "<FaUser/>",
+      "type": "edit",
+      "isLabel": true,
+      "children": [
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "customer/add-customer",
+              "id": 1,
+              "type": "edit"
+          },
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "customer/edit-customer",
+              "id": 2,
+              "type": "edit"
+          }
+      ]
+  },
+  {
+      "id": 3,
+      "title": "Calendar",
+      "path": "calendar",
+      "icon": "<FaCalendarAlt/>",
+      "type": "edit",
+      "isLabel": true,
+      "children": []
+  },
+  {
+      "id": 4,
+      "title": "Orders",
+      "path": "orders",
+      "icon": "<FaCartShopping/>",
+      "type": "edit",
+      "isLabel": false,
+      "children": [
+          {
+              "hideUrl": false,
+              "title": "Add Cart Order",
+              "path": "orders/add-cart-order",
+              "id": 1,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Pending Cart Order",
+              "path": "orders/pending-cart-order",
+              "id": 2,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Add Standing Order",
+              "path": "orders/add-standing-order",
+              "id": 3,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Standing Order List",
+              "path": "orders/standing-order-list",
+              "id": 4,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Total Weekly Order",
+              "path": "orders/total-weekly-order",
+              "id": 5,
+              "type": "edit"
+          }
+      ]
+  },
+  {
+      "id": 5,
+      "title": "Invoice",
+      "path": "invoice",
+      "icon": "<FaFileInvoiceDollar />",
+      "type": "edit",
+      "isLabel": false,
+      "children": [
+          {
+              "hideUrl": false,
+              "title": "Unprocessed Invoices",
+              "path": "invoice/unprocessed-invoices",
+              "id": 1,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Published Invoices",
+              "path": "invoice/invoice-list",
+              "id": 2,
+              "type": "edit"
+          }
+      ]
+  },
+  {
+      "id": 6,
+      "title": "Production",
+      "path": "production",
+      "icon": "<IoSettings/>",
+      "type": "edit",
+      "isLabel": false,
+      "children": [
+          {
+              "hideUrl": false,
+              "title": "Settings",
+              "path": "production/settings",
+              "id": 1,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Production Manifest",
+              "path": "production/production-manifest",
+              "id": 2,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "id": 3,
+              "title": "Routes",
+              "path": "distribution/routes",
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "id": 4,
+              "title": "Delivery Rules",
+              "path": "distribution/delivery-rules",
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "id": 5,
+              "title": "Foot Notes",
+              "path": "distribution/foot-notes",
+              "type": "edit"
+          }
+      ]
+  },
+  {
+      "id": 7,
+      "title": "Distribution",
+      "path": "distribution",
+      "icon": "<GiBoxUnpacking/>",
+      "type": "edit",
+      "isLabel": false,
+      "children": [
+          {
+              "hideUrl": false,
+              "title": "Packing Slip & Driver Report",
+              "path": "distribution/packing-slips-and-driver-report",
+              "id": 1,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Pick & Pack Matrix",
+              "path": "distribution/matrix-view",
+              "id": 2,
+              "type": "edit"
+          }
+      ]
+  },
+  {
+      "id": 8,
+      "title": "Products",
+      "path": "product",
+      "icon": "<RiProductHuntFill/>",
+      "isLabel": false,
+      "type": "edit",
+      "children": [
+          {
+              "hideUrl": false,
+              "title": "Raw Material",
+              "path": "product/raw-material-list",
+              "id": 1,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Fine Raw Material",
+              "path": "product/fine-raw-material",
+              "id": 2,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Fine Product",
+              "path": "product/fine-product-list",
+              "id": 3,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Production",
+              "path": "product/production",
+              "id": 4,
+              "type": "edit"
+          },
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "product/add-raw-material",
+              "id": 5,
+              "type": "edit"
+          },
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "product/edit-raw-material",
+              "id": 6,
+              "type": "edit"
+          },
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "product/add-fine-product",
+              "id": 7,
+              "type": "edit"
+          },
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "product/edit-fine-product",
+              "id": 8,
+              "type": "edit"
+          }
+      ]
+  },
+  {
+      "id": 9,
+      "title": "Inventory Management",
+      "path": "inventory-management",
+      "icon": "<MdInventory2/>",
+      "isLabel": false,
+      "type": "edit",
+      "children": [
+          {
+              "hideUrl": false,
+              "title": "Inventory List",
+              "path": "inventory-management/inventory-list",
+              "id": 1,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Supplier",
+              "path": "inventory-management/supplier/list",
+              "id": 2,
+              "type": "edit"
+          },
+          {
+              "hideUrl": false,
+              "title": "Purchase Order",
+              "path": "inventory-management/purchase-order",
+              "id": 3,
+              "type": "edit"
+          },
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "inventory-management/supplier/add-supplier",
+              "id": 4,
+              "type": "edit"
+          },
+          {
+              "hideUrl": true,
+              "title": "",
+              "path": "inventory-management/supplier/edit-supplier",
+              "id": 5,
+              "type": "edit"
+          }
+      ]
+  }
+]

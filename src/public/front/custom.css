@@ -1,0 +1,25 @@
+.error{
+    display: none !important;
+}
+#btn_spinner{
+    display: none;
+}
+
+.parameters {
+    background-color: #f8f9fa; /* Bootstrap light gray background color */
+    border: 1px solid #dae0e5; /* Bootstrap light border color */
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 5px;
+}
+
+.parameters pre {
+    margin: 0;
+}
+.key {
+    color: #007bff; /* Bootstrap primary color for keys */
+}
+
+.value {
+    color: #28a745; /* Bootstrap success color for values */
+}

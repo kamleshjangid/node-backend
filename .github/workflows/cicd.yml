@@ -1,0 +1,88 @@
+name: Bakery Backend Main
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image
+        run: |
+          docker buildx build --no-cache --load \
+            --build-arg PORT=${{ vars.PORT }} \
+            --build-arg DATABASE_NAME=${{ vars.DATABASE_NAME }} \
+            --build-arg ALLOW_ORIGIN=${{ vars.ALLOW_ORIGIN }} \
+            --build-arg DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }} \
+            --build-arg DATABASE_PASSWORD=${{ vars.DATABASE_PASSWORD }} \
+            --build-arg HOST=${{ vars.HOST }} \
+            --build-arg DB_PORT=${{ vars.DB_PORT }} \
+            -t bakery-backend:latest .
+
+      - name: Create Docker Network
+        run: |
+          docker network create bakery-network || true
+
+      - name: Run PostgreSQL Container
+        run: |
+          if [ "$(docker ps -q -f name=postgres-container)" ]; then
+            echo "PostgreSQL container is already running.";
+          elif [ "$(docker ps -aq -f name=postgres-container)" ]; then
+            echo "PostgreSQL container exists but is stopped. Starting it.";
+            docker start postgres-container;
+          else
+            echo "Creating and starting a new PostgreSQL container.";
+            docker run -d --name postgres-container \
+              --network bakery-network \
+              -p 5432:5432 \
+              -e POSTGRES_DB=${{ vars.DATABASE_NAME }} \
+              -e POSTGRES_USER=${{ vars.DATABASE_USERNAME }} \
+              -e POSTGRES_PASSWORD=${{ vars.DATABASE_PASSWORD }} \
+              -v pgdata:/var/lib/postgresql/data \
+              postgres:latest;
+          fi
+
+      - name: Run PgAdmin Container
+        run: |
+          if [ "$(docker ps -q -f name=pgadmin-container)" ]; then
+            echo "PgAdmin container is already running.";
+          elif [ "$(docker ps -aq -f name=pgadmin-container)" ]; then
+            echo "PgAdmin container exists but is stopped. Starting it.";
+            docker start pgadmin-container;
+          else
+            echo "Creating and starting a new PgAdmin container.";
+            docker run -d --name pgadmin-container \
+              --network bakery-network \
+              -e PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_EMAIL }} \
+              -e PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_PASSWORD }} \
+              -p 8000:80 \
+              dpage/pgadmin4;
+          fi
+
+      - name: Deploy Container Locally
+        run: |
+          if [ $(docker ps -aq -f name=bakery-backend-container) ]; then
+            docker stop bakery-backend-container
+            docker rm bakery-backend-container
+          fi
+
+          docker run -d \
+            --name bakery-backend-container \
+            --network bakery-network \
+            -p ${{ vars.PORT }}:${{ vars.PORT }} \
+            -e DATABASE_NAME=${{ vars.DATABASE_NAME }} \
+            -e ALLOW_ORIGIN=${{ vars.ALLOW_ORIGIN }} \
+            -e DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }} \
+            -e DATABASE_PASSWORD=${{ vars.DATABASE_PASSWORD }} \
+            -e HOST=postgres-container \
+            -e DB_PORT=${{ vars.DB_PORT }} \
+            bakery-backend:latest

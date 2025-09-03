@@ -1,0 +1,38 @@
+[
+    {
+        "id": "3f5c09e9-044c-411c-bc8d-ce62b488ed51",
+        "stateName": "New South Wales (NSW)",
+        "stateUrl": "new-south-wales",
+        "countryId":"67b0ae40-0fd4-4f25-9c17-0c99460fd72d"
+    },
+    {
+        "id": "6872e1a6-1d8b-41a9-9eac-e6db3a53868b",
+        "stateName": "Victoria (VIC)",
+        "stateUrl": "victoria",
+        "countryId":"67b0ae40-0fd4-4f25-9c17-0c99460fd72d"
+    },
+    {
+        "id": "8d39e33a-9b72-4820-8d9f-05876c85073c",
+        "stateName": "Queensland (QLD)",
+        "stateUrl": "queensland",
+        "countryId":"67b0ae40-0fd4-4f25-9c17-0c99460fd72d"
+    },
+    {
+        "id": "6064a2f7-1999-4ce6-91e5-775c4d1a429f",
+        "stateName": "Western Australia (WA)",
+        "stateUrl": "western-australia",
+        "countryId":"67b0ae40-0fd4-4f25-9c17-0c99460fd72d"
+    },
+    {
+        "id": "38485f8c-7279-4ecb-8bb6-ea61fd070b58",
+        "stateName": "South Australia (SA)",
+        "stateUrl": "south-australia",
+        "countryId":"67b0ae40-0fd4-4f25-9c17-0c99460fd72d"
+    },
+    {
+        "id": "cb764108-ac6d-4de7-820f-ae53e7c1505d",
+        "stateName": "Tasmania (TAS)",
+        "stateUrl": "tasmania",
+        "countryId":"67b0ae40-0fd4-4f25-9c17-0c99460fd72d"
+    }
+]

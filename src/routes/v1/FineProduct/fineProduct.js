@@ -1,0 +1,15 @@
+const express =  require('express');
+const router  =  express.Router();
+const fineProductController = require('@controller/v1/fineProduct/fineProductController');
+const { PLATFORM } = require('@constants/authConstant');
+const auth = require('@middleware/auth');
+router.route('/add-fine-product').post(auth(PLATFORM.ADMIN),fineProductController.addFineProduct);
+router.route('/update-fine-product').put(auth(PLATFORM.ADMIN),fineProductController.addFineProduct);
+router.route('/get-fine-product-details/:id').get(auth(PLATFORM.ADMIN),fineProductController.getDetails);
+router.route('/get-fine-product-list').post(auth(PLATFORM.ADMIN),fineProductController.getFineProductList);
+router.route('/add-fine-product-item').post(auth(PLATFORM.ADMIN),fineProductController.addFineProductItem);
+router.route('/update-fine-product-item').put(auth(PLATFORM.ADMIN),fineProductController.addFineProductItem);
+router.route('/get-product-item-details/:id').get(auth(PLATFORM.ADMIN),fineProductController.getProductItemDetails);
+router.route('/get-material-details').post(auth(PLATFORM.ADMIN),fineProductController.getMaterialDetails);
+router.route('/get-item-list').post(auth(PLATFORM.ADMIN),fineProductController.getItemList);
+module.exports = router;
