@@ -13,9 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Debug – list repo files
-        run: ls -la
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -81,7 +78,7 @@ jobs:
           docker run -d \
             --name bakery-backend-container \
             --network bakery-network \
-            -p ${{ vars.PORT }}:${{ vars.PORT }} \
+            -p 8080:8080 \
             -e DATABASE_NAME=${{ vars.DATABASE_NAME }} \
             -e ALLOW_ORIGIN=${{ vars.ALLOW_ORIGIN }} \
             -e DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }} \
