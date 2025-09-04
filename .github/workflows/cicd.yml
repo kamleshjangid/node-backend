@@ -78,7 +78,7 @@ jobs:
           docker run -d \
             --name bakery-backend-container \
             --network bakery-network \
-            -p 8080:8080 \
+            -p 7002:7002 \
             -e DATABASE_NAME=${{ vars.DATABASE_NAME }} \
             -e ALLOW_ORIGIN=${{ vars.ALLOW_ORIGIN }} \
             -e DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }} \
