@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   web:
     build:
@@ -7,16 +5,16 @@ services:
       dockerfile: Dockerfile
     container_name: bakery_web
     ports:
-      - "7002:7002"
+      - "7002:8080"  # Host port 7002 maps to container port 8080 (matching app.listen port)
     environment:
-      PORT: ${PORT}
+      PORT: 8080
       NODE_ENV: ${NODE_ENV}
       DATABASE_NAME: ${DATABASE_NAME}
       ALLOW_ORIGIN: ${ALLOW_ORIGIN}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      HOST: ${HOST}
-      DB_PORT: ${DB_PORT}
+      HOST: db  # This should point to db container hostname for DB connection
+      DB_PORT: 5432
 
   db:
     image: postgres:latest
