@@ -86,3 +86,4 @@ jobs:
             -e HOST=postgres-container \
             -e DB_PORT=${{ vars.DB_PORT }} \
             bakery-backend:latest
+
