@@ -18,15 +18,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker buildx build --no-cache --load \
-            --build-arg PORT=${{ vars.PORT }} \
-            --build-arg DATABASE_NAME=${{ vars.DATABASE_NAME }} \
-            --build-arg ALLOW_ORIGIN=${{ vars.ALLOW_ORIGIN }} \
-            --build-arg DATABASE_USERNAME=${{ vars.DATABASE_USERNAME }} \
-            --build-arg DATABASE_PASSWORD=${{ vars.DATABASE_PASSWORD }} \
-            --build-arg HOST=${{ vars.HOST }} \
-            --build-arg DB_PORT=${{ vars.DB_PORT }} \
-            -t bakery-backend:latest .
+          docker buildx build --no-cache --load -t bakery-backend:latest .
 
       - name: Create Docker Network
         run: |
