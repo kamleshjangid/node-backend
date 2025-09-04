@@ -13,10 +13,10 @@ WORKDIR /app
 
 # Default environment variables (will be overridden at runtime)
 ENV PORT=7002 \
-    DATABASE_NAME=defaultdb \
+    DATABASE_NAME=db_bakery \
     ALLOW_ORIGIN=* \
-    DATABASE_USERNAME=defaultuser \
-    DATABASE_PASSWORD=defaultpass \
+    DATABASE_USERNAME=postgres \
+    DATABASE_PASSWORD=postgres \
     HOST=localhost \
     DB_PORT=5432
 
