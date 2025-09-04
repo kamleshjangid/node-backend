@@ -5,15 +5,15 @@ services:
       dockerfile: Dockerfile
     container_name: bakery_web
     ports:
-      - "7002:8080"  # Host port 7002 maps to container port 8080 (matching app.listen port)
+      - "7002:7002"  
     environment:
-      PORT: 8080
+      PORT: 7002
       NODE_ENV: ${NODE_ENV}
       DATABASE_NAME: ${DATABASE_NAME}
       ALLOW_ORIGIN: ${ALLOW_ORIGIN}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      HOST: db  # This should point to db container hostname for DB connection
+      HOST: db  
       DB_PORT: 5432
 
   db:
