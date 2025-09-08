@@ -29,8 +29,7 @@ jobs:
             -t bakery-backend:latest .
 
       - name: Create Docker Network
-        run: |
-          docker network create bakery-network || true
+        run: docker network create bakery-network || true
 
       - name: Run PostgreSQL Container
         run: |
@@ -70,9 +69,9 @@ jobs:
 
       - name: Deploy Container Locally
         run: |
-          if [ $(docker ps -aq -f name=bakery-backend-container) ]; then
-            docker stop bakery-backend-container
-            docker rm bakery-backend-container
+          if [ "$(docker ps -aq -f name=bakery-backend-container)" ]; then
+            docker stop bakery-backend-container || true
+            docker rm bakery-backend-container || true
           fi
 
           docker run -d \
