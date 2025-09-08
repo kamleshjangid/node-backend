@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   web:
     build:
@@ -5,16 +7,16 @@ services:
       dockerfile: Dockerfile
     container_name: bakery_web
     ports:
-      - "7002:7002"  
+      - "7002:7002"
     environment:
-      PORT: 7002
+      PORT: ${PORT}
       NODE_ENV: ${NODE_ENV}
       DATABASE_NAME: ${DATABASE_NAME}
       ALLOW_ORIGIN: ${ALLOW_ORIGIN}
       DATABASE_USERNAME: ${DATABASE_USERNAME}
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
-      HOST: db  
-      DB_PORT: 5432
+      HOST: ${HOST}
+      DB_PORT: ${DB_PORT}
 
   db:
     image: postgres:latest
