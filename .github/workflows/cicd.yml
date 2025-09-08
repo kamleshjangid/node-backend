@@ -28,6 +28,21 @@ jobs:
             --build-arg DB_PORT=${{ vars.DB_PORT }} \
             -t bakery-backend:latest .
 
+      - name: Create .env file from secrets
+        run: |
+          cat <<EOF > .env
+          DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}
+          DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+          DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+          DB_PORT=${{ secrets.DB_PORT }}
+          EOF
+          cat .env
+
+      - name: Restart containers with new env
+        run: |
+          docker compose down || true
+          docker compose up -d --build
+
       - name: Create Docker Network
         run: docker network create bakery-network || true
 
@@ -87,4 +102,3 @@ jobs:
             -e DB_PORT=${{ vars.DB_PORT }} \
             bakery-backend:latest
 
-            
