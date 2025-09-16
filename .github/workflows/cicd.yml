@@ -1,97 +1,97 @@
-name: Bakery Backend Main
+# name: Bakery Backend Main
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  build-and-deploy:
-    runs-on: self-hosted
+# jobs:
+#   build-and-deploy:
+#     runs-on: self-hosted
 
-    steps:
-      # Checkout source code
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       # Checkout source code
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      # Setup Docker Buildx
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+#       # Setup Docker Buildx
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v2
 
-      # Build backend Docker image
-      - name: Build Docker image
-        run: |
-          docker buildx build --no-cache --load \
-            --build-arg PORT=${{ vars.PORT }} \
-            -t bakery-backend:latest .
+#       # Build backend Docker image
+#       - name: Build Docker image
+#         run: |
+#           docker buildx build --no-cache --load \
+#             --build-arg PORT=${{ vars.PORT }} \
+#             -t bakery-backend:latest .
 
-      # Create backend.env file
-      - name: Create backend.env
-        run: |
-          cat <<EOF > backend.env
-          PORT=8080
-          DATABASE_NAME=${{ secrets.DATABASE_NAME }}
-          ALLOW_ORIGIN=${{ vars.ALLOW_ORIGIN }}
-          DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}
-          DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
-          HOST=postgres-container
-          DB_PORT=${{ secrets.DB_PORT }}
-          EOF
-          cat backend.env
+#       # Create backend.env file
+#       - name: Create backend.env
+#         run: |
+#           cat <<EOF > backend.env
+#           PORT=8080
+#           DATABASE_NAME=${{ secrets.DATABASE_NAME }}
+#           ALLOW_ORIGIN=${{ vars.ALLOW_ORIGIN }}
+#           DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}
+#           DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+#           HOST=postgres-container
+#           DB_PORT=${{ secrets.DB_PORT }}
+#           EOF
+#           cat backend.env
 
-      # Create Docker Network
-      - name: Create Docker Network
-        run: docker network create bakery-network || true
+#       # Create Docker Network
+#       - name: Create Docker Network
+#         run: docker network create bakery-network || true
 
-      # Run PostgreSQL Container
-      - name: Run PostgreSQL Container
-        run: |
-          if [ "$(docker ps -q -f name=postgres-container)" ]; then
-            echo "PostgreSQL container is already running.";
-          elif [ "$(docker ps -aq -f name=postgres-container)" ]; then
-            echo "Starting existing PostgreSQL container.";
-            docker start postgres-container;
-          else
-            echo "Creating and starting new PostgreSQL container.";
-            docker run -d --name postgres-container \
-              --network bakery-network \
-              -p 5432:5432 \
-              -e POSTGRES_DB=${{ secrets.DATABASE_NAME }} \
-              -e POSTGRES_USER=${{ secrets.DATABASE_USERNAME }} \
-              -e POSTGRES_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
-              -v pgdata:/var/lib/postgresql/data \
-              postgres:latest;
-          fi
+#       # Run PostgreSQL Container
+#       - name: Run PostgreSQL Container
+#         run: |
+#           if [ "$(docker ps -q -f name=postgres-container)" ]; then
+#             echo "PostgreSQL container is already running.";
+#           elif [ "$(docker ps -aq -f name=postgres-container)" ]; then
+#             echo "Starting existing PostgreSQL container.";
+#             docker start postgres-container;
+#           else
+#             echo "Creating and starting new PostgreSQL container.";
+#             docker run -d --name postgres-container \
+#               --network bakery-network \
+#               -p 5432:5432 \
+#               -e POSTGRES_DB=${{ secrets.DATABASE_NAME }} \
+#               -e POSTGRES_USER=${{ secrets.DATABASE_USERNAME }} \
+#               -e POSTGRES_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
+#               -v pgdata:/var/lib/postgresql/data \
+#               postgres:latest;
+#           fi
 
-      # Run PgAdmin Container
-      - name: Run PgAdmin Container
-        run: |
-          if [ "$(docker ps -q -f name=pgadmin-container)" ]; then
-            echo "PgAdmin container is already running.";
-          elif [ "$(docker ps -aq -f name=pgadmin-container)" ]; then
-            echo "Starting existing PgAdmin container.";
-            docker start pgadmin-container;
-          else
-            echo "Creating and starting new PgAdmin container.";
-            docker run -d --name pgadmin-container \
-              --network bakery-network \
-              -e PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_EMAIL }} \
-              -e PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_PASSWORD }} \
-              -p 8000:80 \
-              dpage/pgadmin4;
-          fi
+#       # Run PgAdmin Container
+#       - name: Run PgAdmin Container
+#         run: |
+#           if [ "$(docker ps -q -f name=pgadmin-container)" ]; then
+#             echo "PgAdmin container is already running.";
+#           elif [ "$(docker ps -aq -f name=pgadmin-container)" ]; then
+#             echo "Starting existing PgAdmin container.";
+#             docker start pgadmin-container;
+#           else
+#             echo "Creating and starting new PgAdmin container.";
+#             docker run -d --name pgadmin-container \
+#               --network bakery-network \
+#               -e PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_EMAIL }} \
+#               -e PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_PASSWORD }} \
+#               -p 8000:80 \
+#               dpage/pgadmin4;
+#           fi
 
-      # Deploy Backend Container
-      - name: Deploy Backend Container
-        run: |
-          if [ "$(docker ps -aq -f name=bakery-backend-container)" ]; then
-            docker stop bakery-backend-container || true
-            docker rm bakery-backend-container || true
-          fi
+#       # Deploy Backend Container
+#       - name: Deploy Backend Container
+#         run: |
+#           if [ "$(docker ps -aq -f name=bakery-backend-container)" ]; then
+#             docker stop bakery-backend-container || true
+#             docker rm bakery-backend-container || true
+#           fi
 
-          docker run -d \
-            --name bakery-backend-container \
-            --network bakery-network \
-            --env-file backend.env \
-            -p 8080:8080 \
-            bakery-backend:latest
+#           docker run -d \
+#             --name bakery-backend-container \
+#             --network bakery-network \
+#             --env-file backend.env \
+#             -p 8080:8080 \
+#             bakery-backend:latest
