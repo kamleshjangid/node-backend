@@ -1,0 +1,7 @@
+apiVersion: v2
+name: node-backend
+description: Helm chart for Node.js backend with rolling and blue-green deployments
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+

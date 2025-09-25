@@ -1,0 +1,20 @@
+{{- if .Values.grafanaDashboard.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "node-backend.fullname" . }}-grafana-dashboard
+  labels:
+    grafana_dashboard: "1"
+data:
+  node-backend-dashboard.json: |
+    {
+      "annotations": { "list": [] },
+      "panels": [
+        { "type": "graph", "title": "HTTP Requests/s", "targets": [ { "expr": "sum(rate(http_requests_total[5m]))" } ] },
+        { "type": "graph", "title": "CPU Usage", "targets": [ { "expr": "sum(rate(container_cpu_usage_seconds_total{image!=""}[5m]))" } ] }
+      ],
+      "schemaVersion": 27,
+      "title": "Node Backend"
+    }
+{{- end }}
+

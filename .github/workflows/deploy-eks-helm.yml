@@ -1,0 +1,68 @@
+name: Deploy to EKS with Helm
+
+on:
+  workflow_dispatch:
+    inputs:
+      color:
+        description: "Active color for blue/green (blue or green)"
+        required: false
+        default: "blue"
+      strategy:
+        description: "Deployment strategy (rolling or blueGreen)"
+        required: false
+        default: "rolling"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: github-actions
+          aws-region: ${{ secrets.AWS_REGION || 'ap-south-1' }}
+
+      - name: Update kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
+      - name: Set image repository
+        id: img
+        run: |
+          echo "repo=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/fast2book-backend" >> $GITHUB_OUTPUT
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.4
+
+      - name: Helm upgrade/install
+        run: |
+          RELEASE_NAME=${{ secrets.HELM_RELEASE_NAME || 'node-backend' }}
+          NAMESPACE=${{ secrets.K8S_NAMESPACE || 'default' }}
+          STRATEGY=${{ github.event.inputs.strategy }}
+          COLOR=${{ github.event.inputs.color }}
+
+          # Build set flags
+          SET_FLAGS="--set image.repository=${{ steps.img.outputs.repo }} --set image.tag=latest --set strategy.type=${STRATEGY}"
+          if [ "$STRATEGY" = "blueGreen" ]; then
+            SET_FLAGS="$SET_FLAGS --set strategy.blueGreen.enabled=true --set strategy.blueGreen.activeColor=${COLOR}"
+          fi
+
+          helm upgrade --install "$RELEASE_NAME" ./helm \
+            --namespace "$NAMESPACE" --create-namespace \
+            $SET_FLAGS
+
+      - name: Show resources
+        run: |
+          kubectl get deploy,svc,ingress,pods -n ${{ secrets.K8S_NAMESPACE || 'default' }} -o wide
+

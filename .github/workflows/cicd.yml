@@ -1,97 +1,163 @@
-# name: Bakery Backend Main
+name: Build, Push, and Deploy to AWS ECR
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   build-and-deploy:
-#     runs-on: self-hosted
+jobs:
+  build-and-deploy:
+    runs-on: self-hosted # Use 'ubuntu-latest' if not on self-hosted runner
 
-#     steps:
-#       # Checkout source code
-#       - name: Checkout code
-#         uses: actions/checkout@v2
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-#       # Setup Docker Buildx
-#       - name: Set up Docker Buildx
-#         uses: docker/setup-buildx-action@v2
+      - name: Set Environment Variables
+        id: set-env
+        run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> $GITHUB_ENV
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}" >> $GITHUB_ENV
+          echo "AWS_REGION=ap-south-1" >> $GITHUB_ENV
+          echo "AWS_ECR=fast2book-backend" >> $GITHUB_ENV
 
-#       # Build backend Docker image
-#       - name: Build Docker image
-#         run: |
-#           docker buildx build --no-cache --load \
-#             --build-arg PORT=${{ vars.PORT }} \
-#             -t bakery-backend:latest .
+      - name: Debug Environment Variables
+        run: |
+          echo "AWS_ACCOUNT_ID: $AWS_ACCOUNT_ID"
+          echo "AWS_REGION: $AWS_REGION"
+          echo "AWS_ECR: $AWS_ECR"
 
-#       # Create backend.env file
-#       - name: Create backend.env
-#         run: |
-#           cat <<EOF > backend.env
-#           PORT=8080
-#           DATABASE_NAME=${{ secrets.DATABASE_NAME }}
-#           ALLOW_ORIGIN=${{ vars.ALLOW_ORIGIN }}
-#           DATABASE_USERNAME=${{ secrets.DATABASE_USERNAME }}
-#           DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
-#           HOST=postgres-container
-#           DB_PORT=${{ secrets.DB_PORT }}
-#           EOF
-#           cat backend.env
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-#       # Create Docker Network
-#       - name: Create Docker Network
-#         run: docker network create bakery-network || true
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
 
-#       # Run PostgreSQL Container
-#       - name: Run PostgreSQL Container
-#         run: |
-#           if [ "$(docker ps -q -f name=postgres-container)" ]; then
-#             echo "PostgreSQL container is already running.";
-#           elif [ "$(docker ps -aq -f name=postgres-container)" ]; then
-#             echo "Starting existing PostgreSQL container.";
-#             docker start postgres-container;
-#           else
-#             echo "Creating and starting new PostgreSQL container.";
-#             docker run -d --name postgres-container \
-#               --network bakery-network \
-#               -p 5432:5432 \
-#               -e POSTGRES_DB=${{ secrets.DATABASE_NAME }} \
-#               -e POSTGRES_USER=${{ secrets.DATABASE_USERNAME }} \
-#               -e POSTGRES_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
-#               -v pgdata:/var/lib/postgresql/data \
-#               postgres:latest;
-#           fi
+      - name: Build Docker image
+        run: |
+          docker buildx build --no-cache \
+            --build-arg AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            --build-arg AWS_ACCOUNT_ID="${{ secrets.AWS_ACCOUNT_ID }}" \
+            --build-arg AWS_REGION="ap-south-1" \
+            --build-arg AWS_S3_REGION="${{ secrets.AWS_S3_REGION }}" \
+            --build-arg AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+            --build-arg DATABASE_NAME="${{ secrets.DATABASE_NAME }}" \
+            --build-arg DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            --build-arg DEBUG="${{ secrets.DEBUG }}" \
+            --build-arg GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
+            --build-arg GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
+            --build-arg SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+            --build-arg AWS_S3_BUCKET_NAME="${{ vars.AWS_S3_BUCKET_NAME }}" \
+            --build-arg EMAIL_HOST="${{ vars.EMAIL_HOST }}" \
+            --build-arg EMAIL_PASSWORD="${{ vars.EMAIL_PASSWORD }}" \
+            --build-arg EMAIL_PORT="${{ vars.EMAIL_PORT }}" \
+            --build-arg EMAIL_USER="${{ vars.EMAIL_USER }}" \
+            --build-arg FRONT_URL="${{ vars.FRONT_URL }}" \
+            --build-arg GOOGLE_REDIRECT_URI="${{ vars.GOOGLE_REDIRECT_URI }}" \
+            --build-arg PORT="${{ vars.PORT }}" \
+            --build-arg RAZOR_PAY_KEY_ID="${{ secrets.RAZOR_PAY_KEY_ID }}" \
+            --build-arg RAZOR_PAY_KEY_SECRET="${{ secrets.RAZOR_PAY_KEY_SECRET }}" \
+            --build-arg AWS_S3_REGION="${{ secrets.AWS_S3_REGION }}" \
+            --build-arg PROJECT_ID="${{ secrets.PROJECT_ID }}" \
+            --build-arg PRIVATE_KEY_ID="${{ secrets.PRIVATE_KEY_ID }}" \
+            --build-arg PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" \
+            --build-arg CLIENT_EMAIL="${{ secrets.CLIENT_EMAIL }}" \
+            --build-arg CLIENT_ID="${{ secrets.CLIENT_ID }}" \
+            --build-arg AUTH_URI="${{ secrets.AUTH_URI }}" \
+            --build-arg TOKEN_URI="${{ secrets.TOKEN_URI }}" \
+            --build-arg AUTH_PROVIDER_X509_CERT_URL="${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}" \
+            --build-arg CLIENT_X509_CERT_URL="${{ secrets.CLIENT_X509_CERT_URL }}" \
+            --build-arg UNIVERSE_DOMAIN="${{ secrets.UNIVERSE_DOMAIN }}" \
+            --build-arg TYPE="${{ vars.TYPE }}" \
+            --build-arg APPLE_CLIENT_ID="${{ secrets.APPLE_CLIENT_ID }}" \
+            --build-arg APPLE_TEAM_ID="${{ secrets.APPLE_TEAM_ID }}" \
+            --build-arg APPLE_KEY_ID="${{ secrets.APPLE_KEY_ID }}" \
+            --build-arg TWILIO_ACCOUNT_SID="${{ secrets.TWILIO_ACCOUNT_SID }}" \
+            --build-arg TWILIO_AUTH_TOKEN="${{ secrets.TWILIO_AUTH_TOKEN }}" \
+            --build-arg TWILIO_MESSAGING_SERVICE_SID="${{ secrets.TWILIO_MESSAGING_SERVICE_SID }}" \
+            -t $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/fast2book-backend:latest \
+            --load .
 
-#       # Run PgAdmin Container
-#       - name: Run PgAdmin Container
-#         run: |
-#           if [ "$(docker ps -q -f name=pgadmin-container)" ]; then
-#             echo "PgAdmin container is already running.";
-#           elif [ "$(docker ps -aq -f name=pgadmin-container)" ]; then
-#             echo "Starting existing PgAdmin container.";
-#             docker start pgadmin-container;
-#           else
-#             echo "Creating and starting new PgAdmin container.";
-#             docker run -d --name pgadmin-container \
-#               --network bakery-network \
-#               -e PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_EMAIL }} \
-#               -e PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_PASSWORD }} \
-#               -p 8000:80 \
-#               dpage/pgadmin4;
-#           fi
+      - name: List Docker images
+        run: docker images
 
-#       # Deploy Backend Container
-#       - name: Deploy Backend Container
-#         run: |
-#           if [ "$(docker ps -aq -f name=bakery-backend-container)" ]; then
-#             docker stop bakery-backend-container || true
-#             docker rm bakery-backend-container || true
-#           fi
+      - name: Push Docker image to AWS ECR
+        run: |
+          docker push $AWS_ACCOUNT_ID.dkr.ecr.ap-south-1.amazonaws.com/fast2book-backend:latest
 
-#           docker run -d \
-#             --name bakery-backend-container \
-#             --network bakery-network \
-#             --env-file backend.env \
-#             -p 8080:8080 \
-#             bakery-backend:latest
+      - name: Create Docker Network
+        run: |
+          docker network create fast2book-network || true
+
+      - name: Start Redis Container
+        run: |
+          docker stop redis-server || true
+          docker rm redis-server || true
+          docker run -d \
+            --name redis-server \
+            --network fast2book-network \
+            --restart always \
+            -p 6379:6379 \
+            redis:latest
+
+      - name: Deploy Container Locally
+        run: |
+          # Stop and remove existing container if it exists
+          if [ $(docker ps -aq -f name=fast2book-backend-container) ]; then
+            docker stop fast2book-backend-container
+            docker rm fast2book-backend-container
+          fi
+
+          # Pull the latest image from ECR
+          docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/fast2book-backend:latest
+
+          # Run the new container
+          docker run -d \
+            --name fast2book-backend-container \
+            --network fast2book-network \
+            -p 5000:5000 \
+            -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            -e AWS_ACCOUNT_ID="${{ secrets.AWS_ACCOUNT_ID }}" \
+            -e AWS_REGION="${{ secrets.AWS_REGION }}" \
+            -e AWS_S3_REGION="${{ secrets.AWS_S3_REGION }}" \
+            -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+            -e DATABASE_NAME="${{ secrets.DATABASE_NAME }}" \
+            -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+            -e DEBUG="${{ secrets.DEBUG }}" \
+            -e GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
+            -e GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
+            -e SECRET_KEY="${{ secrets.SECRET_KEY }}" \
+            -e AWS_S3_BUCKET_NAME="${{ vars.AWS_S3_BUCKET_NAME }}" \
+            -e EMAIL_HOST="${{ vars.EMAIL_HOST }}" \
+            -e EMAIL_PASSWORD="${{ vars.EMAIL_PASSWORD }}" \
+            -e EMAIL_PORT="${{ vars.EMAIL_PORT }}" \
+            -e EMAIL_USER="${{ vars.EMAIL_USER }}" \
+            -e FRONT_URL="${{ vars.FRONT_URL }}" \
+            -e GOOGLE_REDIRECT_URI="${{ vars.GOOGLE_REDIRECT_URI }}" \
+            -e PORT="${{ vars.PORT }}" \
+            -e RAZOR_PAY_KEY_ID="${{ secrets.RAZOR_PAY_KEY_ID }}" \
+            -e RAZOR_PAY_KEY_SECRET="${{ secrets.RAZOR_PAY_KEY_SECRET }}" \
+            -e AWS_S3_REGION="${{ secrets.AWS_S3_REGION }}" \
+            -e PROJECT_ID="${{ secrets.PROJECT_ID }}" \
+            -e PRIVATE_KEY_ID="${{ secrets.PRIVATE_KEY_ID }}" \
+            -e PRIVATE_KEY="${{ secrets.PRIVATE_KEY }}" \
+            -e CLIENT_EMAIL="${{ secrets.CLIENT_EMAIL }}" \
+            -e CLIENT_ID="${{ secrets.CLIENT_ID }}" \
+            -e AUTH_URI="${{ secrets.AUTH_URI }}" \
+            -e TOKEN_URI="${{ secrets.TOKEN_URI }}" \
+            -e AUTH_PROVIDER_X509_CERT_URL="${{ secrets.AUTH_PROVIDER_X509_CERT_URL }}" \
+            -e CLIENT_X509_CERT_URL="${{ secrets.CLIENT_X509_CERT_URL }}" \
+            -e UNIVERSE_DOMAIN="${{ secrets.UNIVERSE_DOMAIN }}" \
+            -e TYPE="${{ vars.TYPE }}" \
+            -e APPLE_CLIENT_ID="${{ secrets.APPLE_CLIENT_ID }}" \
+            -e APPLE_TEAM_ID="${{ secrets.APPLE_TEAM_ID }}" \
+            -e APPLE_KEY_ID="${{ secrets.APPLE_KEY_ID }}" \
+            -e TWILIO_ACCOUNT_SID="${{ secrets.TWILIO_ACCOUNT_SID }}" \
+            -e TWILIO_AUTH_TOKEN="${{ secrets.TWILIO_AUTH_TOKEN }}" \
+            -e TWILIO_MESSAGING_SERVICE_SID="${{ secrets.TWILIO_MESSAGING_SERVICE_SID }}" \
+            $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/fast2book-backend:latest

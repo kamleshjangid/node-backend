@@ -1,0 +1,104 @@
+replicaCount: 2
+
+image:
+  repository: "<aws_account_id>.dkr.ecr.ap-south-1.amazonaws.com/fast2book-backend"
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+
+service:
+  type: ClusterIP
+  port: 5000
+  targetPort: 5000
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+resources:
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+env:
+  - name: NODE_ENV
+    value: "production"
+
+# Basic Prometheus pod scraping via annotations (fallback when ServiceMonitor is disabled)
+prometheus:
+  scrape:
+    enabled: true
+    path: "/metrics"
+    portName: http
+    interval: "15s"
+
+# Prometheus Operator ServiceMonitor support
+serviceMonitor:
+  enabled: false
+  interval: 15s
+  scrapeTimeout: 10s
+  labels: {}
+  path: /metrics
+  portName: http
+  scheme: http
+  tlsConfig: {}
+  relabelings: []
+  metricRelabelings: []
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 15
+  periodSeconds: 20
+
+strategy:
+  type: "rolling" # "rolling" or "blueGreen"
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
+  blueGreen:
+    enabled: false
+    activeColor: blue # blue or green
+    otherColor: green
+
+podAnnotations: {}
+
+podLabels: {}
+
+extraLabels: {}
+
+# Logging to CloudWatch via aws-for-fluent-bit (installed separately)
+cloudwatch:
+  enabled: false
+  region: ap-south-1
+  logGroupName: "/eks/node-backend"
+  logStreamPrefix: "app"
+
+grafanaDashboard:
+  enabled: false
+

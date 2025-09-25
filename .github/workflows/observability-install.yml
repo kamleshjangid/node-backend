@@ -1,0 +1,62 @@
+name: Install Observability Stack
+
+on:
+  workflow_dispatch:
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          role-session-name: github-actions
+          aws-region: ${{ secrets.AWS_REGION || 'ap-south-1' }}
+
+      - name: Update kubeconfig for EKS
+        run: |
+          aws eks update-kubeconfig --name ${{ secrets.EKS_CLUSTER_NAME }} --region ${{ secrets.AWS_REGION }}
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.4
+
+      - name: Add Helm repos
+        run: |
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo add grafana https://grafana.github.io/helm-charts
+          helm repo add aws https://aws.github.io/eks-charts
+          helm repo update
+
+      - name: Install kube-prometheus-stack
+        run: |
+          NAMESPACE=monitoring
+          helm upgrade --install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
+            --namespace $NAMESPACE --create-namespace \
+            --set grafana.adminPassword=${{ secrets.GRAFANA_ADMIN_PASSWORD || 'admin' }}
+
+      - name: Install aws-for-fluent-bit
+        run: |
+          NAMESPACE=logging
+          helm upgrade --install aws-for-fluent-bit aws/aws-for-fluent-bit \
+            --namespace $NAMESPACE --create-namespace \
+            --set cloudWatch.region=${{ secrets.AWS_REGION }} \
+            --set cloudWatch.logGroupName=/eks/node-backend \
+            --set cloudWatch.logStreamPrefix=app \
+            --set serviceAccount.create=true
+
+      - name: Show monitoring resources
+        run: |
+          kubectl get pods,svc -n monitoring
+          kubectl get pods,svc -n logging
+
